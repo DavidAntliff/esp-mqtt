@@ -16,7 +16,15 @@ git submodule add https://github.com/256dpi/esp-mqtt.git components/esp-mqtt
 git submodule update --init --recursive
 ```
 
-The component will automatically enable the LWIP receive buffers. 
+The component will automatically enable the LWIP receive buffers.
+
+### PlatformIO
+
+You need to set `CONFIG_LWIP_SO_RCVBUF=y` manually in `sdkconfig`.
+
+## Example
+
+An example can be found here: https://github.com/256dpi/esp-mqtt/blob/master/test/main/main.c.
 
 ## API
 
@@ -27,10 +35,16 @@ void esp_mqtt_init(esp_mqtt_status_callback_t scb, esp_mqtt_message_callback_t m
                    size_t buffer_size, int command_timeout);
 ```
 
+Optionally, configure a Last Will and Testament (a topic to be published by the broker in the event of an ungraceful disconnection):
+
+```c++
+void esp_mqtt_lwt(const char *topic, const char *payload, int qos, bool retained);
+```
+
 When the WiFi connection has been established, start the process:
 
 ```c++
-void esp_mqtt_start(const char *host, int port, const char *client_id,
+void esp_mqtt_start(const char *host, const char *port, const char *client_id,
                     const char *username, const char *password);
 ```
 
